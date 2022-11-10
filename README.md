@@ -1166,3 +1166,180 @@ mainloop()
 ______________________________________________________________________________________________________________________________________________________________________
 
 Version 2.0
+
+from random import *
+from time import *
+
+ids = 0
+sites = 0
+froze = ('<function froze>')
+accounts = {}
+balance = {}
+denet_hranilishe = {}
+login = 'id'
+sending = (':send ')
+end = (' >>')
+blockchain = [balance]
+nomer = 0
+otpravitel = {}
+poluchatel = {}
+summa = {}
+kosel = ('Ваш баланс: ')
+
+staker = {}
+staking_balance = {}
+stake_block = 0
+
+
+def logup():
+    global ids
+    accounts[ids] = randint(100000, 999999)
+    print(ids, accounts[ids])
+    balance[ids] = 1
+    ids = ids + 1
+
+
+def login():
+    global kosel
+    login = int(input('Введите ID: '))
+    password = int(input('Введите пароль: '))
+    if accounts[login] == password:
+        print('Вы вошли в аккаунт', login, '/', kosel, balance[login], 'ROOTOO')
+    else:
+        print('Вы не вошли в аккаунт')
+
+
+def send():
+    global blockchain
+    global sending
+    global end
+    global otpravitel
+    global poluchatel
+    global summa
+    global nomer
+    login = int(input('Введите ID(для отправления Rootoo): '))
+    password = int(input('Введите пароль(для отправления Rootoo): '))
+    if accounts[login] == password:
+        print('Вы вошли в аккаунт', login, '/', balance[login], 'ROOTOO', 'отправление ROOTOO')
+        amount = int(input('сумма отправления: '))
+        if amount <= balance[login]:
+            deposit = int(input('адрес получателя: '))
+            balance[login] = balance[login] - amount
+            balance[deposit] = balance[deposit] + amount
+            print('перевод успешно завершён!!! отправления с кошелька: ', login, 'на кошелёк: ', deposit, 'в сумме:',
+                  amount, 'ROOTOO')
+            otpravitel[nomer] = login
+            poluchatel[nomer] = deposit
+            summa[nomer] = amount
+            blockchain = (blockchain, nomer, sending, login, deposit, amount, end)
+            print('номер транзакции:', nomer)
+            otpravitel[nomer] = login
+            poluchatel[nomer] = deposit
+            summa[nomer] = amount
+            nomer = nomer + 1
+        else:
+            print('Извините но на вашем балансе не достатачно средств.')
+    else:
+        print('Вы не вошли в аккаунт(для отправления Rootoo)')
+
+
+def rootooscan():
+    global blockchain
+    vibor = input(
+        'напишите цифру действия для выполнения \n 1 - просмотр транзакции по номеру \n 2 - просмотр стэйкинга по номеру \n 3 - посмотреть баланс пользователя по адресу \n 4 - посмотреть весь блокчейн: ')
+    if vibor == '1':
+        tranza = int(input('введите номер транзакции: '))
+        print('с адреса: ')
+        print(otpravitel[tranza])
+        print('на адрес: ')
+        print(poluchatel[tranza])
+        print('сумма отправления: ')
+        print(summa[tranza])
+    elif vibor == '2':
+        staking = int(input('введите номер Staking_block: '))
+        print('Адресс стэйкера: ')
+        print(staker[staking])
+        print('сумма стэйкинга: ')
+        print(staking_balance[staking])
+    elif vibor == '3':
+        adress = int(input('Введите адрес пользователя: '))
+        print(blockchain[adress])
+    elif vibor == '4':
+        print(blockchain)
+
+
+def denet():
+    global sites
+    vibor = input('Что сделать? создать новый denet ?- тогда напиши -denet- / если просто поиск - то нажми -ENTER- ')
+    if vibor == "denet":
+        k1 = input('пишите код denet сайта: ')
+        denet_hranilishe[sites] = k1
+        print('Адрес вашего сайта: ', sites)
+        sites = sites + 1
+    else:
+        poisk = int(input('Введите ссылку на denet: '))
+        print('Вы зашли на denet: ', poisk)
+        print(denet_hranilishe[poisk])
+
+
+def froze():
+    global blockchain
+    global froze
+    global end
+    global stake_block
+    global time_stamp
+    login = int(input('Введите ID(для заморозки Rootoo): '))
+    password = int(input('Введите пароль(для заморозки Rootoo): '))
+    if accounts[login] == password:
+        print('Вы вошли в аккаунт', login, '/', balance[login], 'ROOTOO', 'Заморозка + стэйкинг')
+        amount = int(input('сумма заморозки: '))
+        if amount <= balance[login]:
+            balance[login] = balance[login] - amount
+            print('ЗАМОРОЗКА УСПЕШНО ЗАВЕРШЕНА!!! заморозка с кошелька: ', login, 'в сумме:', amount, 'ROOTOO')
+            blockchain = (blockchain, froze, login, amount, end)
+            staker[stake_block] = login
+            staking_balance[stake_block] = amount
+            print('Staking_block: ', stake_block)
+            stake_block = stake_block + 1
+            profit = amount / 10
+            sleep(10)
+            balance[login] = balance[login] + amount + profit
+        else:
+            print('Извините но на вашем балансе не достатачно средств.')
+    else:
+        print('Вы не вошли в аккаунт')
+
+
+def change_password():
+    login = int(input('Введите ID: '))
+    password = int(input('Введите пароль: '))
+    if accounts[login] == password:
+        print('Вы вошли в аккаунт, меняйте пароль', login, '/', balance[login], 'ROOTOO')
+        new_password = int(input('введите новый пароль ))) '))
+        print('Ваш новый пароль:', new_password)
+        sleep(1)
+        print('ОБРАБОТКА...')
+        sleep(1)
+        accounts[login] = new_password
+        print('Пароль успешно изменён!!!')
+    else:
+        print('Вы ввели неправильный логин/пароль')
+
+
+while True:
+    chouse = input(
+        ' чтобы создать аккаунт напишите <1> \n чтобы посмотреть баланс аккаунта напишите <2> \n чтобы отправить токены напишите <3> \n чтобы просмотреть блокчейн напишите <4> \n чтобы зайти в Denet Browser напишите <5> \n чтобы застэйкать Rootoo напишите <6> \n чтобы поменять пароль напишите <7>: ')
+    if chouse == '1':
+        logup()
+    if chouse == '2':
+        login()
+    if chouse == '3':
+        send()
+    if chouse == '4':
+        rootooscan()
+    if chouse == '5':
+        denet()
+    if chouse == '6':
+        froze()
+    if chouse == '7':
+        change_password()
